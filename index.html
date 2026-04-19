@@ -255,7 +255,6 @@
         };
         container.appendChild(video);
         // пытаемся запустить
-        video.play().catch((e) => console.log("автоплей заблокирован"));
         nextBtn.textContent = "Сорян, не то😳";
       });
 
@@ -263,14 +262,14 @@
       steps.push(() => {
         const container = document.getElementById("dynamicContent");
         container.innerHTML = "";
+
         const textDiv = document.createElement("div");
         textDiv.className = "cringe-text";
         textDiv.style.fontSize = "26px";
         textDiv.style.textAlign = "center";
         textDiv.style.background = "#fff0f5";
-        textDiv.innerHTML = "💸 БЛЯЯЯЯ ПРИКИНЬ БАБОК НЕ ХВАТИЛО 💸";
+        textDiv.innerHTML = "ТЯ НЮ НАХУЙ";
         container.appendChild(textDiv);
-
         const video = document.createElement("video");
         video.src = "assets/media/2.mp4";
         video.className = "media-file";
@@ -282,7 +281,6 @@
             '<div class="cringe-text">📀 2.mov потерялся, но суть та же — бабки кончились 📀</div>';
         };
         container.appendChild(video);
-        video.play().catch((e) => console.log);
         nextBtn.textContent = "💵 Шаурма в сплит 💵";
       });
 
@@ -290,6 +288,14 @@
       steps.push(() => {
         const container = document.getElementById("dynamicContent");
         container.innerHTML = "";
+        const textDiv = document.createElement("div");
+        textDiv.className = "cringe-text";
+        textDiv.style.fontSize = "26px";
+        textDiv.style.textAlign = "center";
+        textDiv.style.background = "#fff0f5";
+        textDiv.innerHTML =
+          "💸 БЛЯЯЯЯ ПРИКИНЬ БАБОК НА ПОЛНОЕ ВИДЕО НЕ ХВАТИЛО 💸";
+        container.appendChild(textDiv);
         const longText = document.createElement("div");
         longText.className = "cringe-text";
         longText.style.fontSize = "17px";
@@ -345,7 +351,7 @@
         textDiv.style.textAlign = "center";
         textDiv.style.background = "#fbffd3";
         textDiv.innerHTML =
-          "🧀 СОРЯН БАБОК РЕАЛЬНО НЕ БЫЛО, КАРОЧ НУ ТАМ ТВОЯ ФОТКА ТИПО БЫЛА У АФРИКАН БРОУС НУ ПРОСТО ТАК ДУМАЙ 🧀 НУ КАРОЧ С ДРШКОЙ :) 🎂✨";
+          "🧀 И ТУТ ПОХОДУ БАБОК НЕ ХВАТИЛО КАРОЧ, КАРОЧ НУ ТАМ ТВОЯ ФОТКА ТИПО БЫЛА У АФРИКАН БРОУС НУ ПРОСТО ТАК ДУМАЙ 🧀 НУ КАРОЧ С ДРШКОЙ :) 🎂✨";
         container.appendChild(textDiv);
 
         const img = document.createElement("img");
