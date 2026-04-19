@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>С Днём Рождения, Сашулька!</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none; /* чисто для мемности, чтобы текст нельзя было выделить как в кринж-роликах */
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #fdeff2 0%,
+          #ffe6f0 50%,
+          #f8e8ff 100%
+        );
+        font-family:
+          "Comic Sans MS", "Chalkboard SE", "Marker Felt", "Papyrus",
+          "Kristen ITC", cursive, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      /* Главная карточка — как пастельная открытка */
+      .card {
+        max-width: 800px;
+        width: 100%;
+        background: rgba(255, 250, 245, 0.92);
+        backdrop-filter: blur(2px);
+        border-radius: 70px 70px 80px 80px;
+        box-shadow:
+          0 25px 45px rgba(0, 0, 0, 0.1),
+          0 0 0 12px #fff8,
+          0 0 0 15px #fbc4d5;
+        padding: 30px 25px 40px;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      /* контейнер для меняющегося контента */
+      .content-box {
+        min-height: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 15px 0 20px;
+      }
+
+      /* текст-дуга WORdART стиль */
+      .wordart-arc {
+        font-size: 52px;
+        font-weight: bold;
+        text-align: center;
+        margin: 20px 0;
+        display: inline-block;
+        width: 100%;
+        transform: rotate(0deg);
+        background: none;
+        letter-spacing: 4px;
+        font-family: "Comic Sans MS", "Chalkboard SE", "Snap ITC", cursive;
+        text-shadow: 3px 3px 0 #ffb7c5;
+      }
+
+      /* каждая буква в дуге будет разноцветной и слегка искривлена */
+      .arc-letter {
+        display: inline-block;
+        transform: rotate(var(--rot, 0deg)) translateY(var(--y, 0px));
+        font-size: 58px;
+        margin: 0 -3px;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+      }
+
+      /* стиль для обычного текста поздравлений (кринж-стиль) */
+      .cringe-text {
+        font-size: 18px;
+        line-height: 1.5;
+        background: #fffef7;
+        padding: 20px;
+        border-radius: 48px;
+        box-shadow:
+          0 10px 20px rgba(0, 0, 0, 0.05),
+          inset 0 1px 0 #fff8;
+        font-weight: bold;
+        color: #4a2e3b;
+        max-height: 500px;
+        overflow-y: auto;
+        text-align: left;
+        font-family: "Comic Sans MS", "Chalkboard SE", "Bradley Hand", cursive;
+      }
+
+      /* картинки, видео */
+      .media-file {
+        max-width: 100%;
+        border-radius: 48px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        border: 4px solid #ffe2e9;
+        background: #ffe6f0;
+      }
+
+      video.media-file {
+        width: 100%;
+        background: #000;
+      }
+
+      img.media-file {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .youtube-embed {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 48px;
+        border: 5px solid #ffcfdf;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      /* кнопка дальше — максимально мемная */
+      .next-btn {
+        background: #ffb347;
+        background: linear-gradient(135deg, #ffb88c, #ff8c5a);
+        border: none;
+        font-size: 32px;
+        font-family:
+          "Comic Sans MS", "Chalkboard SE", "Permanent Marker", cursive;
+        font-weight: bold;
+        padding: 15px 35px;
+        border-radius: 100px;
+        color: white;
+        text-shadow: 2px 2px 0 #b45f2b;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: 0.2s;
+        box-shadow: 0 8px 0 #9b4a1e;
+        letter-spacing: 2px;
+      }
+
+      .next-btn:active {
+        transform: translateY(4px);
+        box-shadow: 0 4px 0 #9b4a1e;
+      }
+
+      /* пастельные акценты */
+      hr {
+        margin: 15px 0;
+        border: 1px dashed #f6bfd0;
+      }
+
+      footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #b18597;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <!-- динамический контент будет тут -->
+      <div id="dynamicContent" class="content-box">
+        <!-- сюда будем вставлять всё: текст дугу, картинки, видео, ютуб -->
+      </div>
+
+      <!-- кнопка переключения -->
+      <button class="next-btn" id="nextButton">РОТИШЬ?🤭</button>
+      <footer>🍰 жмякай, пока лицо не плющит 🍰</footer>
+    </div>
+
+    <script>
+      // --------------------------------------------------------------
+      // 1. подготовим все сцены (шаги)
+      // --------------------------------------------------------------
+      const steps = [];
+
+      // ---- ШАГ 0: дуга WordArt + картинка 1.jpg
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+
+        const nextBtn = document.getElementById("nextButton");
+
+        // дуга с разноцветными буквами
+        const arcWrapper = document.createElement("div");
+        arcWrapper.className = "wordart-arc";
+        const titleText = "С ДНЕМ РОЖДЕНИЯ!";
+        const colors = [
+          "#FF3366",
+          "#FF9933",
+          "#FFCC33",
+          "#66CC33",
+          "#33CCFF",
+          "#9966FF",
+          "#FF66CC",
+          "#FF3366",
+          "#66FFCC",
+          "#FF9966",
+        ];
+
+        for (let i = 0; i < titleText.length; i++) {
+          const span = document.createElement("span");
+          span.className = "arc-letter";
+          const char = titleText[i];
+          // хитрый поворот чтобы дуга выглядела изогнутой
+          const angle = (i - titleText.length / 2) * 3.8;
+          const yOffset = Math.sin((i / titleText.length) * Math.PI) * 12;
+          span.style.transform = `rotate(${angle}deg) translateY(${-Math.abs(yOffset) + 4}px)`;
+          span.style.color = colors[i % colors.length];
+          span.style.textShadow = `0 2px 3px rgba(0,0,0,0.2)`;
+          span.innerText = char;
+          arcWrapper.appendChild(span);
+        }
+        container.appendChild(arcWrapper);
+
+        // картинка 1.jpg
+        const img = document.createElement("img");
+        img.src = "assets/media/1.jpg";
+        img.alt = "поздравительная картинка";
+        img.className = "media-file";
+        img.style.marginTop = "20px";
+        img.style.maxHeight = "350px";
+        img.style.width = "auto";
+        img.onerror = () => {
+          img.src = "https://placehold.co/600x400?text=1.jpg+not+found";
+        };
+        container.appendChild(img);
+      });
+
+      // ---- ШАГ 1: видео 1.mov
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+        const video = document.createElement("video");
+        video.src = "assets/media/1.mov";
+        video.className = "media-file";
+        video.controls = true;
+        video.autoplay = false;
+        video.muted = false;
+        video.style.width = "100%";
+        video.onerror = () => {
+          video.outerHTML =
+            '<div class="cringe-text">🎬 видео 1.mov не найдено, но ты представь драму! 🎬</div>';
+        };
+        container.appendChild(video);
+        // пытаемся запустить
+        video.play().catch((e) => console.log("автоплей заблокирован"));
+        nextBtn.textContent = "Сорян, не то😳";
+      });
+
+      // ---- ШАГ 2: текст "БЛЯЯЯЯ ПРИКИНЬ БАБОК НЕ ХВАТИЛО" + видео 2.mov
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+        const textDiv = document.createElement("div");
+        textDiv.className = "cringe-text";
+        textDiv.style.fontSize = "26px";
+        textDiv.style.textAlign = "center";
+        textDiv.style.background = "#fff0f5";
+        textDiv.innerHTML = "💸 БЛЯЯЯЯ ПРИКИНЬ БАБОК НЕ ХВАТИЛО 💸";
+        container.appendChild(textDiv);
+
+        const video = document.createElement("video");
+        video.src = "assets/media/2.mp4";
+        video.className = "media-file";
+        video.controls = true;
+        video.autoplay = false;
+        video.style.marginTop = "20px";
+        video.onerror = () => {
+          video.outerHTML =
+            '<div class="cringe-text">📀 2.mov потерялся, но суть та же — бабки кончились 📀</div>';
+        };
+        container.appendChild(video);
+        video.play().catch((e) => console.log);
+        nextBtn.textContent = "💵 Шаурма в сплит 💵";
+      });
+
+      // ---- ШАГ 3: огромный поздравлятельный текст (Сашулька + бегимот)
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+        const longText = document.createElement("div");
+        longText.className = "cringe-text";
+        longText.style.fontSize = "17px";
+        longText.style.maxHeight = "450px";
+        longText.innerHTML = `
+            🎂 С ДНЕМ РОЖДЕНИЯ ТЕБЯ, САШУЛЬКА! 🥳 ЖЖЖЕЛАЮ🧞‍♂️, ЧОБИ ТЫ ВСЕГДА ОСТАВАЛАСЬ ТАКОЙ ПОЗИТИВНОЙ И СВЕТЛОЙ ЧУВАЧЕЧКОЙ✨🧸<br>
+            ЧОБИ НА ВОРК ВСЁ БЫЛО СУПЕР💼⚡️, ЧОБИ В ШАВЕРМАХ БЫЛ ПРИВКУС ОКРОШКИ🥙🤢<br>
+            ЧОБИ ВОДА ПРЕВРАЩАЛАСЬ В МАТЧА ЛАТТЕ ПО ВЕЛЕНИЮ🪄☕️, А НЕ ЗА 300 РУБЛЕЙ💸🔮<br>
+            ТЫ ДОБРЯК И Я ЭТОМУ РАД🥹🤝 СПАСИБО ЗА ВСЕ СВЕТЛЫЕ МОМЕНТЫ🌈📸<br>
+            ПУСТЬ СБЫВАЮТСЯ ВСЕ МЕЧТЫ, ТЫ УМА🧠🔥<br><br>
+            ДАРАГАЯ🎀 САШКА, РЕАЛЬНО✨ ХАЙПУЛЬКА🌟 НЕРЕАЛЬНАЯ, С ПРАЗДНИКОМ! 🎉💐<br>
+            ПУСТЬ У ВАС ВСЕГДА БУДЕТ ЧИСТАЯ🌸 ГОЛОВА, ЧТОБЫ МЫТЬ ЕЕ НЕ ПРИХАДИЛОСЬ💆‍♀️💫<br>
+            А ТАКЖЕ ЧТОБЫ ВЫ РЕАЛЬНО🌈 НЕРЕАЛЬНОЙ ТАКОЙ БЫЛИ, НУ ПРЯМ ТАКОЙ ТИПО МИМИ🐶 МУМУ🌸✨<br>
+            ЧТОБ✨ НУ ЧТОБ ВЕТЕР🌬 ВАМ ПОМЕХ НЕ СОЗДАВАЛ, ЧТОБ ТАКИМИ ЖЕ ПРИКОЛЬНЫМИ🎀 ОСТАВАЛИСЬ🌸🌺<br>
+            НУ КАРОЧ ДОБРА ВАМ. ВЫ ЛУЧИК🌟💐 РАДОСТ✨<br>
+            БУДТО БЫ СМОТРЮ НА МИР СКВОЗЬ ЩЕЛЬ ЗУБОВ ДОРЫ😁💎<br><br>
+            С УВАЖЕНИЕМ, BEGIMOT6! 🎁💐🌸💖<br>
+            И ПОМЕНЬШЕ ВАМ ТОПЕЙ В ЖИЗНИ 🤭🤭🤭
+        `;
+        container.appendChild(longText);
+        nextBtn.textContent = "К подарку 🙈🙈🙈";
+      });
+
+      // ---- ШАГ 4: текст "СОРЯН БАБОК РЕАЛЬНО НЕ БЫЛО ..." + ютуб видео
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+        const textDiv = document.createElement("div");
+        textDiv.className = "cringe-text";
+        textDiv.style.marginBottom = "20px";
+        textDiv.innerHTML =
+          "🧀 СОРЯН БАБОК РЕАЛЬНО НЕ БЫЛО, КАРОЧ НУ ТАМ ТВОЯ ФОТКА ТИПО НУ ПРОСТО ТАК ДУМАЙ 🧀";
+        container.appendChild(textDiv);
+
+        const iframe = document.createElement("iframe");
+        iframe.className = "youtube-embed";
+        iframe.src =
+          "https://www.youtube.com/embed/C8redWF91xg?autoplay=0&mute=0";
+        iframe.title = "YouTube video";
+        iframe.allow =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        container.appendChild(iframe);
+        nextBtn.textContent = "Дальше";
+      });
+
+      // ---- ШАГ 5: текст "НУ КАРОЧ С ДРШКОЙ :)" + фото 3.jpg
+      steps.push(() => {
+        const container = document.getElementById("dynamicContent");
+        container.innerHTML = "";
+        const textDiv = document.createElement("div");
+        textDiv.className = "cringe-text";
+        textDiv.style.fontSize = "36px";
+        textDiv.style.textAlign = "center";
+        textDiv.style.background = "#fbffd3";
+        textDiv.innerHTML = "НУ КАРОЧ С ДРШКОЙ :) 🎂✨";
+        container.appendChild(textDiv);
+
+        const img = document.createElement("img");
+        img.src = "assets/media/3.jpg";
+        img.className = "media-file";
+        img.style.marginTop = "20px";
+        img.alt = "финальная фотка";
+        img.onerror = () => {
+          img.src =
+            "https://placehold.co/600x400?text=3.jpg+не+найдена+но+ты+умничка";
+        };
+        container.appendChild(img);
+        nextBtn.textContent = "Всё";
+      });
+
+      // ---- ФИНАЛЬНЫЙ ШАГ (последний) — зациклить или просто оставить кнопку "снова"? Сделаем, чтобы после последнего шага кнопка переводила на первый (бесконечный кринж)
+      let currentStep = 0;
+      const totalSteps = steps.length;
+
+      function renderStep(index) {
+        if (index >= totalSteps) {
+          // если вдруг вышли за пределы — начинаем сначала
+          currentStep = 0;
+          nextBtn.textContent = "По новой";
+          renderStep(0);
+          return;
+        }
+        steps[index]();
+      }
+
+      // кнопка далее
+      const nextBtn = document.getElementById("nextButton");
+      nextBtn.addEventListener("click", () => {
+        currentStep++;
+        if (currentStep >= totalSteps) {
+          // после последнего шага переходим на первый (закольцованный хаос)
+          currentStep = 0;
+        }
+        renderStep(currentStep);
+      });
+
+      // начальная отрисовка (шаг 0)
+      renderStep(0);
+    </script>
+  </body>
+</html>
